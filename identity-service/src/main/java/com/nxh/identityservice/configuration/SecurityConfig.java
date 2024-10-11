@@ -23,7 +23,7 @@ public class SecurityConfig {
   private final String[] H2_ENDPOINT = {"/h2-console/**"};
 
   private final String[] PUBLIC_ENDPOINT = {
-    "/users", "/auth/token", "auth/verify", "/auth/logout"
+    "/users", "/auth/token", "auth/verify", "/auth/logout", "/auth/refresh"
   };
 
   @Value("${jwt.signerKey}")
