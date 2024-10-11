@@ -1,7 +1,9 @@
 package com.nxh.identityservice.configuration;
 
+import com.nxh.identityservice.constant.PredefinedRole;
+import com.nxh.identityservice.entity.Role;
 import com.nxh.identityservice.entity.User;
-import com.nxh.identityservice.enums.Role;
+import com.nxh.identityservice.repository.RoleRepository;
 import com.nxh.identityservice.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,19 +34,27 @@ public class ApplicationInitConfig {
       prefix = "spring",
       value = "datasource.driver-class-name",
       havingValue = "org.h2.Driver")
-  ApplicationRunner applicationRunner(UserRepository userRepository) {
+  ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
     log.info("Initializing application.....");
     return args -> {
       if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
+        roleRepository.save(Role.builder()
+                .name(PredefinedRole.USER_ROLE)
+                .description("User role")
+                .build());
 
-        var roles = new HashSet<String>();
-        roles.add(Role.ADMIN.name());
+        Role adminRole = roleRepository.save(Role.builder()
+                .name(PredefinedRole.ADMIN_ROLE)
+                .description("Admin role")
+                .build());
 
-        User user =
-            User.builder()
+        var roles = new HashSet<Role>();
+        roles.add(adminRole);
+
+        User user = User.builder()
                 .username(ADMIN_USER_NAME)
                 .password(passwordEncoder.encode(ADMIN_PASSWORD))
-                //.roles(roles)
+                .roles(roles)
                 .build();
 
         userRepository.save(user);

@@ -1,10 +1,11 @@
 package com.nxh.identityservice.service;
 
+import com.nxh.identityservice.constant.PredefinedRole;
 import com.nxh.identityservice.dto.request.UserCreationRequest;
 import com.nxh.identityservice.dto.request.UserUpdateRequest;
 import com.nxh.identityservice.dto.response.UserResponse;
+import com.nxh.identityservice.entity.Role;
 import com.nxh.identityservice.entity.User;
-import com.nxh.identityservice.enums.Role;
 import com.nxh.identityservice.exception.AppException;
 import com.nxh.identityservice.exception.ErrorCode;
 import com.nxh.identityservice.mapper.UserMapper;
@@ -39,13 +40,14 @@ public class UserService {
     }
     User user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    HashSet<String> roles = new HashSet<>();
-    roles.add(Role.USER.name());
-    // user.setRoles(roles);
+    HashSet<Role> roles = new HashSet<>();
+    roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
+    user.setRoles(roles);
     return userMapper.toUserResponse(userRepository.save(user));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
+  // @PreAuthorize("hasAuthority('PERMISSION_VIEW)")
   public List<UserResponse> getUsers() {
     return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
   }
@@ -62,10 +64,10 @@ public class UserService {
         userRepository
             .findById(userId)
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    userMapper.updateUser(user, request);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    user.setLastName(request.getLastName());
-    user.setFirstName(request.getFirstName());
-    user.setDob(request.getDob());
+    var roles = roleRepository.findAllById(request.getRoles());
+    user.setRoles(new HashSet<>(roles));
     return userMapper.toUserResponse(userRepository.save(user));
   }
 

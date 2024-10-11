@@ -4,7 +4,6 @@ import com.nxh.identityservice.dto.request.ApiResponse;
 import com.nxh.identityservice.dto.request.UserCreationRequest;
 import com.nxh.identityservice.dto.request.UserUpdateRequest;
 import com.nxh.identityservice.dto.response.UserResponse;
-import com.nxh.identityservice.entity.User;
 import com.nxh.identityservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

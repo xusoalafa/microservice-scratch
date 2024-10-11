@@ -1,11 +1,10 @@
 package com.nxh.identityservice.configuration;
 
-import com.nxh.identityservice.enums.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,15 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
@@ -30,11 +23,14 @@ public class SecurityConfig {
   private final String[] H2_ENDPOINT = {"/h2-console/**"};
 
   private final String[] PUBLIC_ENDPOINT = {
-    "/console/**", "/h2-console/**", "/users", "/auth/token", "auth/verify"
+    "/users", "/auth/token", "auth/verify", "/auth/logout"
   };
 
   @Value("${jwt.signerKey}")
   protected String SIGNER_KEY;
+
+  @Autowired
+  private CustomJwtDecoder customJwtDecoder;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -56,7 +52,7 @@ public class SecurityConfig {
                 .jwt(
                     jwtConfigurer ->
                         jwtConfigurer
-                            .decoder(jwtEncoder())
+                            .decoder(customJwtDecoder)
                             .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
@@ -73,17 +69,21 @@ public class SecurityConfig {
     JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
         new JwtGrantedAuthoritiesConverter();
     // change prefix default SCOPE_ to ROLE_
-    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+    // jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+    // We actually included custom prefix ROLE_ in the value of role to distinguish role and
+    // permission, can refer to AuthenticationService.buildScope() for more details.
+    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
     return jwtAuthenticationConverter;
   }
 
-  @Bean
-  JwtDecoder jwtEncoder() {
-    SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
-    return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
-  }
+  // we create a CustomJwtDecoder, so we will not use this bean in jwtConfigurer.decoder()
+  //  @Bean
+  //  JwtDecoder jwtEncoder() {
+  //    SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
+  //    return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
+  //  }
 
   @Bean
   PasswordEncoder passwordEncoder() {
