@@ -1,19 +1,21 @@
 package com.nxh.identityservice.controller;
 
-import com.nimbusds.jose.JOSEException;
-import com.nxh.identityservice.dto.request.*;
-import com.nxh.identityservice.dto.response.AuthenticationResponse;
-import com.nxh.identityservice.dto.response.IntrospectResponse;
-import com.nxh.identityservice.service.AuthenticationService;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.text.ParseException;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
+import com.nimbusds.jose.JOSEException;
+import com.nxh.identityservice.dto.request.*;
+import com.nxh.identityservice.dto.response.AuthenticationResponse;
+import com.nxh.identityservice.dto.response.IntrospectResponse;
+import com.nxh.identityservice.service.AuthenticationService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,7 +46,7 @@ public class AuthenticationController {
 
   @PostMapping("/refresh")
   ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request)
-          throws ParseException, JOSEException {
+      throws ParseException, JOSEException {
     var result = authenticationService.refreshToken(request);
     return ApiResponse.<AuthenticationResponse>builder().result(result).build();
   }

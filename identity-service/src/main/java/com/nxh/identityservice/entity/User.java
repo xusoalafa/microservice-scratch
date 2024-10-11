@@ -1,11 +1,12 @@
 package com.nxh.identityservice.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Set;
+
+import jakarta.persistence.*;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -24,6 +25,5 @@ public class User {
   String firstName;
   LocalDate dob;
   String lastName;
-  @ManyToMany
-  Set<Role> roles;
+  @ManyToMany Set<Role> roles;
 }

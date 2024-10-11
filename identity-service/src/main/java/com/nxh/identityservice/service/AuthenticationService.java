@@ -1,5 +1,18 @@
 package com.nxh.identityservice.service;
 
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.StringJoiner;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -7,9 +20,9 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nxh.identityservice.dto.request.AuthenticationRequest;
 import com.nxh.identityservice.dto.request.IntrospectRequest;
+import com.nxh.identityservice.dto.request.LogoutRequest;
 import com.nxh.identityservice.dto.request.RefreshTokenRequest;
 import com.nxh.identityservice.dto.response.AuthenticationResponse;
-import com.nxh.identityservice.dto.request.LogoutRequest;
 import com.nxh.identityservice.dto.response.IntrospectResponse;
 import com.nxh.identityservice.entity.InvalidatedToken;
 import com.nxh.identityservice.entity.User;
@@ -17,23 +30,12 @@ import com.nxh.identityservice.exception.AppException;
 import com.nxh.identityservice.exception.ErrorCode;
 import com.nxh.identityservice.repository.InvalidatedTokenRepository;
 import com.nxh.identityservice.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -62,12 +64,11 @@ public class AuthenticationService {
       Date expireTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
       InvalidatedToken invalidatedToken =
-              InvalidatedToken.builder().id(jit).expireTime(expireTime).build();
+          InvalidatedToken.builder().id(jit).expireTime(expireTime).build();
       invalidatedTokenRepository.save(invalidatedToken);
     } catch (AppException exception) {
       log.info("Token already expired");
     }
-
   }
 
   public AuthenticationResponse refreshToken(RefreshTokenRequest request)

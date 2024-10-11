@@ -1,16 +1,18 @@
 package com.nxh.identityservice.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nxh.identityservice.dto.request.ApiResponse;
-import com.nxh.identityservice.exception.ErrorCode;
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nxh.identityservice.dto.request.ApiResponse;
+import com.nxh.identityservice.exception.ErrorCode;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
   @Override
@@ -26,9 +28,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     ApiResponse<?> apiResponse =
         ApiResponse.builder().code(errorCode.getCode()).message(errorCode.getMessage()).build();
     ObjectMapper objectMapper = new ObjectMapper();
-    response
-        .getWriter()
-        .write(objectMapper.writeValueAsString(apiResponse));
+    response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
     response.flushBuffer();
   }
 }

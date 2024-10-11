@@ -29,8 +29,7 @@ public class SecurityConfig {
   @Value("${jwt.signerKey}")
   protected String SIGNER_KEY;
 
-  @Autowired
-  private CustomJwtDecoder customJwtDecoder;
+  @Autowired private CustomJwtDecoder customJwtDecoder;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -82,7 +81,8 @@ public class SecurityConfig {
   //  @Bean
   //  JwtDecoder jwtEncoder() {
   //    SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
-  //    return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
+  //    return
+  // NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
   //  }
 
   @Bean

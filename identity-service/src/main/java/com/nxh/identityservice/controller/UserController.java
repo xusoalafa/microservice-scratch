@@ -1,18 +1,21 @@
 package com.nxh.identityservice.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import com.nxh.identityservice.dto.request.ApiResponse;
 import com.nxh.identityservice.dto.request.UserCreationRequest;
 import com.nxh.identityservice.dto.request.UserUpdateRequest;
 import com.nxh.identityservice.dto.response.UserResponse;
 import com.nxh.identityservice.service.UserService;
-import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,7 +52,9 @@ public class UserController {
   @PutMapping("/{userId}")
   ApiResponse<UserResponse> updateUser(
       @RequestBody @Valid UserUpdateRequest request, @PathVariable String userId) {
-    return ApiResponse.<UserResponse>builder().result(userService.updateUser(userId, request)).build();
+    return ApiResponse.<UserResponse>builder()
+        .result(userService.updateUser(userId, request))
+        .build();
   }
 
   @DeleteMapping("/{userId}")

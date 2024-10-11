@@ -1,6 +1,7 @@
 package com.nxh.identityservice.dto.response;
 
 import java.util.Set;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
-    String name;
-    String description;
-    Set<PermissionResponse> permissions;
+  String name;
+  String description;
+  Set<PermissionResponse> permissions;
 }

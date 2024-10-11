@@ -1,17 +1,20 @@
 package com.nxh.identityservice.service;
 
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.nxh.identityservice.dto.request.RoleRequest;
 import com.nxh.identityservice.dto.response.RoleResponse;
 import com.nxh.identityservice.mapper.RoleMapper;
 import com.nxh.identityservice.repository.PermissionRepository;
 import com.nxh.identityservice.repository.RoleRepository;
-import java.util.HashSet;
-import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
