@@ -30,7 +30,7 @@ public class AuthenticationController {
     return ApiResponse.<AuthenticationResponse>builder().result(result).build();
   }
 
-  @PostMapping("/verify")
+  @PostMapping("/introspect")
   ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
       throws ParseException, JOSEException {
     var result = authenticationService.introspect(request);
