@@ -2,24 +2,18 @@ server:
   port: 8080
   servlet:
     context-path: /identity
+
 spring:
-  application:
-    name: identity-service
   datasource:
-    url: jdbc:h2:file:~/data/identity-service
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity_service}
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    password: ${DBMS_PASSWORD:root}
+    username: ${DBMS_USERNAME:root}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
+
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
   valid-duration: 3600 # in second
