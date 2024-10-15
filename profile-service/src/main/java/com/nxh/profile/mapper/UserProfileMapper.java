@@ -1,7 +1,7 @@
 package com.nxh.profile.mapper;
 
 import com.nxh.profile.dto.request.ProfileCreationRequest;
-import com.nxh.profile.dto.response.UserProfileReponse;
+import com.nxh.profile.dto.response.UserProfileResponse;
 import com.nxh.profile.entity.UserProfile;
 import org.mapstruct.Mapper;
 
@@ -9,5 +9,5 @@ import org.mapstruct.Mapper;
 public interface UserProfileMapper {
     UserProfile toUserProfile(ProfileCreationRequest request);
 
-    UserProfileReponse toUserProfileReponse(UserProfile entity);
+    UserProfileResponse toUserProfileReponse(UserProfile entity);
 }

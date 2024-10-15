@@ -11,6 +11,7 @@
     <modules>
         <module>identity-service</module>
         <module>profile-service</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>

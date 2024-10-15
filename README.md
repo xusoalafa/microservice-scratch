@@ -1,8 +1,10 @@
 # microservice-scratch
-
-# sonarqube: admin/admin -> admin/12345
-docker pull sonarqube:lts-community
-docker run --name sonarqube-custom -p 9000:9000 -d sonarqube:lts-community
-# mysql
-docker pull mysql:8.0.39-debian
-docker run --name mysql-8.0.39 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0.39-debian
+## Spring Security 
+* Document Reference:
+* `https://docs.spring.io/spring-security/reference/servlet/index.html`
+## Spring Data Neo4j
+* Document Reference:
+`https://docs.spring.io/spring-data/neo4j/docs/7.1.5/reference/html/#reference`
+## Spring Cloud Gateway
+* Document Reference
+`https://docs.spring.io/spring-cloud-gateway/reference/index.html`

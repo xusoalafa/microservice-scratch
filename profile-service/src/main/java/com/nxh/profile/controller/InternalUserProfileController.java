@@ -1,5 +1,6 @@
 package com.nxh.profile.controller;
 
+import com.nxh.profile.dto.request.ProfileCreationRequest;
 import com.nxh.profile.dto.response.UserProfileResponse;
 import com.nxh.profile.service.UserProfileService;
 import lombok.AccessLevel;
@@ -9,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/internal/users")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/users")
-public class UserProfileController {
+public class InternalUserProfileController {
     UserProfileService userProfileService;
-    @GetMapping("/{profileId}")
-    UserProfileResponse getProfile(@PathVariable String profileId) {
-        return userProfileService.getProfile(profileId);
+    @PostMapping
+    UserProfileResponse createProfile(@RequestBody ProfileCreationRequest request) {
+        return userProfileService.createProfile(request);
     }
 }
