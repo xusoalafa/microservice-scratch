@@ -98,7 +98,8 @@ public class SecurityConfig {
     corsConfiguration.addAllowedMethod("*");
     corsConfiguration.addAllowedHeader("*");
 
-    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource =
+        new UrlBasedCorsConfigurationSource();
     urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
     return new CorsFilter(urlBasedCorsConfigurationSource);

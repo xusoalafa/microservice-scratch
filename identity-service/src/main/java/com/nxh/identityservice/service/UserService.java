@@ -18,9 +18,11 @@ import com.nxh.identityservice.entity.Role;
 import com.nxh.identityservice.entity.User;
 import com.nxh.identityservice.exception.AppException;
 import com.nxh.identityservice.exception.ErrorCode;
+import com.nxh.identityservice.mapper.ProfileMapper;
 import com.nxh.identityservice.mapper.UserMapper;
 import com.nxh.identityservice.repository.RoleRepository;
 import com.nxh.identityservice.repository.UserRepository;
+import com.nxh.identityservice.repository.httpclient.ProfileClient;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
   UserRepository userRepository;
   RoleRepository roleRepository;
+  ProfileClient profileClient;
   UserMapper userMapper;
+  ProfileMapper profileMapper;
   PasswordEncoder passwordEncoder;
 
   public UserResponse createUser(UserCreationRequest request) {
@@ -48,6 +52,10 @@ public class UserService {
     } catch (DataIntegrityViolationException exception) {
       throw new AppException(ErrorCode.USER_EXISTED);
     }
+    var profileRequest = profileMapper.toProfileCreationRequest(request);
+    profileRequest.setUserId(user.getId());
+
+    profileClient.createProfile(profileRequest);
     return userMapper.toUserResponse(user);
   }
 

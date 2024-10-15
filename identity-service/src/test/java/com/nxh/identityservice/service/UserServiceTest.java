@@ -61,9 +61,6 @@ public class UserServiceTest {
         User.builder()
             .id("cf0600f538b3")
             .username("john")
-            .firstName("John")
-            .lastName("Doe")
-            .dob(dob)
             .build();
   }
 
