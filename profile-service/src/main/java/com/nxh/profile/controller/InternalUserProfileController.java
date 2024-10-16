@@ -1,5 +1,6 @@
 package com.nxh.profile.controller;
 
+import com.nxh.profile.dto.ApiResponse;
 import com.nxh.profile.dto.request.ProfileCreationRequest;
 import com.nxh.profile.dto.response.UserProfileResponse;
 import com.nxh.profile.service.UserProfileService;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class InternalUserProfileController {
     UserProfileService userProfileService;
     @PostMapping
-    UserProfileResponse createProfile(@RequestBody ProfileCreationRequest request) {
-        return userProfileService.createProfile(request);
+    ApiResponse<UserProfileResponse> createProfile(@RequestBody ProfileCreationRequest request) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.createProfile(request))
+                .build();
     }
 }

@@ -11,7 +11,7 @@ spring:
     username: ${DBMS_USERNAME:root}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
 jwt:

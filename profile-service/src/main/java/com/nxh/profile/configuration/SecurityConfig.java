@@ -1,4 +1,4 @@
-package com.nxh.identityservice.configuration;
+package com.nxh.profile.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,24 +8,16 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-  private final String[] H2_ENDPOINT = {"/h2-console/**"};
-
   private final String[] PUBLIC_ENDPOINT = {
-    "/users/registration", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
+          "/internal/users"
   };
 
   @Autowired private CustomJwtDecoder customJwtDecoder;
@@ -36,8 +28,6 @@ public class SecurityConfig {
         request ->
             request
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT)
-                .permitAll()
-                .requestMatchers(H2_ENDPOINT)
                 .permitAll()
                 .anyRequest()
                 .authenticated());
@@ -52,12 +42,6 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
     httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
-    // setup to view h2-console
-    httpSecurity.headers(
-        httpSecurityHeadersConfigurer ->
-            httpSecurityHeadersConfigurer.frameOptions(
-                HeadersConfigurer.FrameOptionsConfig::disable));
     return httpSecurity.build();
   }
 
@@ -73,10 +57,5 @@ public class SecurityConfig {
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
     return jwtAuthenticationConverter;
-  }
-
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(10);
   }
 }
