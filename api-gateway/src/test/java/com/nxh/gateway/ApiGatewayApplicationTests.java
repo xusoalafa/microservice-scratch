@@ -1,4 +1,4 @@
-package com.example.apigateway;
+package com.nxh.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

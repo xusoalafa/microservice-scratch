@@ -11,25 +11,36 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserProfileService {
-    UserProfileRepository userProfileRepository;
-    UserProfileMapper userProfileMapper;
+  UserProfileRepository userProfileRepository;
+  UserProfileMapper userProfileMapper;
 
-    public UserProfileResponse createProfile(ProfileCreationRequest request) {
-        UserProfile userProfile = userProfileMapper.toUserProfile(request);
-        userProfile = userProfileRepository.save(userProfile);
+  public UserProfileResponse createProfile(ProfileCreationRequest request) {
+    UserProfile userProfile = userProfileMapper.toUserProfile(request);
+    userProfile = userProfileRepository.save(userProfile);
 
-        return userProfileMapper.toUserProfileReponse(userProfile);
-    }
+    return userProfileMapper.toUserProfileReponse(userProfile);
+  }
 
-    public UserProfileResponse getProfile(String id) {
-        UserProfile userProfile =
-                userProfileRepository.findById(id).orElseThrow(() -> new RuntimeException("Profile not found"));
+  public UserProfileResponse getProfile(String id) {
+    UserProfile userProfile =
+        userProfileRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        return userProfileMapper.toUserProfileReponse(userProfile);
-    }
+    return userProfileMapper.toUserProfileReponse(userProfile);
+  }
+
+  public List<UserProfileResponse> getAllProfiles() {
+    return userProfileRepository.findAll().stream()
+        .map(userProfileMapper::toUserProfileReponse)
+        .collect(Collectors.toList());
+  }
 }
