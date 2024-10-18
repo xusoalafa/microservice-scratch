@@ -2,6 +2,12 @@
 
 ## Prerequisites
 
+### Signup free account brevo for email service 
+* Link: `https://www.brevo.com`
+* Generate api-key to use in backend`https://app.brevo.com/settings/keys/api`
+* Go to Brevo dev to try send email with api-key: `https://developers.brevo.com/reference/sendtransacemail`
+* Can use yopmail to test
+
 ### Mongodb
 Install Mongodb from Docker Hub
 
