@@ -3,6 +3,8 @@ package com.nxh.profile.service;
 import com.nxh.profile.dto.request.ProfileCreationRequest;
 import com.nxh.profile.dto.response.UserProfileResponse;
 import com.nxh.profile.entity.UserProfile;
+import com.nxh.profile.exception.AppException;
+import com.nxh.profile.exception.ErrorCode;
 import com.nxh.profile.mapper.UserProfileMapper;
 import com.nxh.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,5 +47,15 @@ public class UserProfileService {
     return userProfileRepository.findAll().stream()
         .map(userProfileMapper::toUserProfileReponse)
         .collect(Collectors.toList());
+  }
+
+  public UserProfileResponse getMyProfile() {
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userId = authentication.getName();
+
+    var profile = userProfileRepository.findByUserId(userId)
+            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+    return userProfileMapper.toUserProfileReponse(profile);
   }
 }
